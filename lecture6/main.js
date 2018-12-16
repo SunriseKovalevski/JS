@@ -26,10 +26,12 @@ function Programmer(id, name, surname, level, lines, cost) {
     this.cost = cost;
 }
 
-function Company(name, money, minus) {
+function Company(name, money, minus, strings, managers) {
     this.name = name;
     this.money = money;
     this.minus = minus;
+    this.strings = strings;
+    this.managers = managers;
 }
 
 Programmer.prototype.callMyName = function () {
@@ -39,22 +41,25 @@ Programmer.prototype.callMyName = function () {
 
 
 /************/
+var company = new Company('My company --->', 10000, 0, 0, []);
+
 let project = [];
-var company = new Company('My company --->', 10000, 0);
-for (let i = 0; i < 10; i++) {
-    let tempProject = new Project(i, '1', 1, 1);
+for (let i = 0; i < 6; i++) {
+    let tempProject = new Project(i, '1', 100*i, 200*i);
     project.push(tempProject);
 };
+
 let manager = [];
-// Manager(id, progr, proj, name, surname, zarplata, qualification, emplList, projList) 
-for (let i = 0; i < 10; i++) {
-    let tempManager = new Manager(i, 'progr', 'project', 'name', 'surname', i*100, 1.2, 1, 1);
+// Manager(id, progr, proj, name, surname, zarplata, qualification, emplList, projList)
+for (let i = 0; i < 6; i++) {
+    let tempManager = new Manager(i, [], '', 'name', 'surname', i*100, 1.2, 1, 1);
     manager.push(tempManager);
 };
-//function Programmer(id, name, surname, level, lines, cost) 
+
+//function Programmer(id, name, surname, level, lines, cost)
 let programmer = [];
-for (let i = 0; i < 10; i++) {
-    let tempProgrammer = new Programmer(i, 'name','surname','junior','100', 42);
+for (let i = 0; i < 6; i++) {
+    let tempProgrammer = new Programmer(i, 'name','surname','junior', 100, 42);
     programmer.push(tempProgrammer);
 };
 
@@ -67,13 +72,13 @@ document.body.appendChild(mainContainer);
 
 const companyContainer = document.createElement('div');
 companyContainer.setAttribute('class', 'company-container');
+companyContainer.style.display = 'flex';
 companyContainer.style.borderStyle = 'solid';
 mainContainer.appendChild(companyContainer);
 
 const companyMainFrame = document.createElement('div');
 companyMainFrame.setAttribute('class', 'company-main-frame');
 companyMainFrame.style.borderStyle = 'solid';
-companyMainFrame.style.display = 'flex';
 companyContainer.appendChild(companyMainFrame);
 
 const companyText = document.createElement('p');
@@ -95,6 +100,15 @@ const companyMinus = document.createElement('p');
 companyMinus.setAttribute('class', 'company-minus');
 companyMinus.innerHTML = company.minus;
 companyMainFrame.appendChild(companyMinus);
+
+const companyStrings = document.createElement('p');
+companyStrings.setAttribute('class', 'company-strings');
+companyStrings.innerHTML = company.strings;
+companyMainFrame.appendChild(companyStrings);
+
+const companyManagers = document.createElement('p');
+companyManagers.setAttribute('class', 'company-managers');
+companyMainFrame.appendChild(companyManagers);
 
 /******MANAGERS******/
 
@@ -140,6 +154,7 @@ manager.forEach(manager => {
         console.log(manager.id);
         company.minus += manager.zarplata;
         companyMinus.innerHTML = company.minus;
+    companyManagers.innerHTML += manager.name + ' ';
     });
     managerContainer.appendChild(managerHire);
 });
@@ -150,7 +165,8 @@ manager.forEach(manager => {
 const projectContainer = document.createElement('div');
 projectContainer.setAttribute('class', 'projects-container');
 projectContainer.style.borderStyle = 'solid';
-projectContainer.style.cssFloat = 'left';
+
+projectContainer.style.display = 'flex';
 projectContainer.style.textAlign = 'center';
 mainContainer.appendChild(projectContainer);
 
@@ -197,7 +213,7 @@ const programmerContainer = document.createElement('div');
 programmerContainer.setAttribute('class', 'programmers-container');
 programmerContainer.style.borderStyle = 'solid';
 programmerContainer.style.display = 'flex';
-programmerContainer.style.cssFloat = 'left';
+programmerContainer.style.textAlign = 'center';
 mainContainer.appendChild(programmerContainer);
 
 programmer.forEach(programmer => {
@@ -244,6 +260,10 @@ programmer.forEach(programmer => {
     programmersHire.innerHTML = 'Взять по объявлению';
     programmersHire.addEventListener('click', function() {
         console.log(programmer.id);
+        company.minus += programmer.cost;
+        company.strings += programmer.lines;
+        companyMinus.innerHTML = company.minus;
+        companyStrings.innerHTML = company.strings;
     });
     programmersContainer.appendChild(programmersHire);
 });
